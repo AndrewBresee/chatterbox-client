@@ -4,6 +4,8 @@ var app = {};
 
 app.rooms = {}; 
 
+app.banedChars = ['&','<', '>', '"', "'", '`', '!', '@', '$', '%', '(', ')', '=', '+', '{', '}', '[', ']'];
+
 // A method to add unique rooms. Fetch will pull down unique room names, adding them to the dom. 
   // obj[4chan] === undefined
     //obj[4chan] = 4chan;
@@ -90,32 +92,39 @@ app.fetch = function(){
       $.each(objects, function (i, items) {
         if(items.text !== undefined && items.username !== undefined ){
           var usernamePassed = true; 
-          var tempUsername = items.username.toLowerCase();
-          for(var i=0; i<tempUsername.length; i++){
-            if (!(tempUsername.charCodeAt(i) >= 97 && tempUsername.charCodeAt(i) <= 122)){
-              usernamePassed = false;
-            }
+          
+          for(var i=0; i<items.username.length; i++){
+              if (app.banedChars.indexOf(items.username[i]) >= 0){ 
+                usernamePassed = false;
+              }
           }
 
-          var tempMessage = items.text.toLowerCase();
           var textPassed = true; 
-          for(var j=0; j<tempMessage.length ; j++){
-            if (!(tempMessage.charCodeAt(j) >= 97 && tempMessage.charCodeAt(j) <= 122)){
+          console.log("items: " , items)
+          if ( items.text !== undefined ) {
+          for(var j=0; j<items.text.length ; j++){
+            if (app.banedChars.indexOf(items.text[i]) >= 0) {
               textPassed = false;
             }
           }
+        }
+
+           console.log("textPassed: ", textPassed);
+           console.log("usernamePassed: ", usernamePassed);
 
           if(textPassed && usernamePassed){
             // $('#chats').append('<div>'+items.username+': '+items.text+'</div>');
             app.addMessage(items.username, items.text);
-            app.addRoom(items.roomname);
+            if (app.rooms[items.roomname] === undefined){
+              app.rooms[items.roomname] = items.roomname;
+              app.addRoom(items.roomname);
+            }
           }
          
         }
-      });    
-    });
+      });
+      });   
     },
-    
     error: function (request, errorType, errorMessage) {
       return 'sorry! '+ 'this is a '+ errorType+ ' message is '+ errorMessage;  
     }
