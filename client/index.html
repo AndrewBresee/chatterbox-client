@@ -8,9 +8,9 @@
     <!-- dependencies -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.6.15/browser.js"></script>
     <script src="bower_components/jquery/dist/jquery.js"></script>
-    <!-- your scripts -->
     <script src="env/config.js"></script>
     <script src="scripts/app.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
   </head>
 
   <body>
@@ -18,7 +18,14 @@
     <div id="main">
       <h1>chatterbox</h1>
 
-      <input type="text" name="message" id="message" placeholder="Enter that Message YOOOO"/>
+      <form action="#">
+        <input type="text" name="message" id="message" placeholder="Enter them messages!"/> 
+        <select id="roomSelect">
+          <!-- <option value="wildroom">Wildroom</option>
+          <option value="theroom">The Room</option>
+          <option value="superlobby">Super Lobby</option> -->
+        </select>
+      </form>
       <!-- <input type="submit" name="submit" class="submit"/> -->
 
 

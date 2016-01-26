@@ -1,3 +1,17 @@
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+.userChat {
+  background-color: gray;
+  padding: 10px;
+  border: solid;
+  border-color: black;
+}
+
 body {
     background: #eee;
     text-align: center;
