@@ -69,8 +69,7 @@ app.addFriend = function(){
 };
 
 app.handleSubmit = function(mes){
-  console.log("HandleSubmit: ",mes); 
-  return true;
+    
 };
 
 
@@ -88,31 +87,66 @@ $(document).ready(function () {
   });
 
 
-  $('.submit').on('click' ,function(event){
-    var message = $('#message').val();
-    app.handleSubmit(message); 
-    event.stopPropagation();
+  // $('.submit').on('click' ,function(event){
+  //   var message = $('#message').val();
+  //   app.handleSubmit(message); 
+  //   event.stopPropagation();
+  // });
+
+$('input[type=text]').on('keypress' ,function(event){
+    if ( event.which === 13 ) {
+      var msg = $(this).val()
+      console.log(msg)
+      $(this).val("");
+    }
+    // var message = $('#message').val();
+    // app.handleSubmit(message); 
+    // event.stopPropagation();
   });
 
 
-
-//   var $chatbox = $('.chat-box');
-//   var $chatul = $('.chat-ul');
+  var $chatbox = $('.chat-box');
+  var $chatul = $('.chat-ul');
  
-//   $.ajax({
-//     url: 'https://api.parse.com/1/classes/chatterbox',
-//     type: 'GET',
-//     contentType: 'application/json',
-//     success: function (data) {
-//     $.each(data, function(i, item){
-//       $.each(item, function (i, object) {
-//         console.log(object.username);
-//         app[i] = object.username; 
-//         var x = $('.chat-box .chat-ul').append('<div>'+object.username+'</div>');
-//       });
-//     });
-//   }
+  $.ajax({
+    url: 'https://api.parse.com/1/classes/chatterbox',
+    type: 'GET',
+    contentType: 'application/json',
+    success: function (data) {
+      $.each(data, function(i, item){
+      $.each(item, function (i, object) {
 
-//   });
+        if(object.text !== undefined && object.username !== undefined ){
+          var usernamePassed = true; 
+          var tempUsername = object.username.toLowerCase();
+          for(var i=0; i<tempUsername.length ; i++){
+            if (!(tempUsername.charCodeAt(i) >= 97 && tempUsername.charCodeAt(i) <= 122)){
+              usernamePassed = false;
+            }
+          }
 
+          var tempMessage = object.text.toLowerCase();
+          var textPassed = true; 
+          for(var j=0; j<tempMessage.length ; j++){
+            if (!(tempMessage.charCodeAt(j) >= 97 && tempMessage.charCodeAt(j) <= 122)){
+              textPassed = false;
+            }
+          }
+
+          if(textPassed && usernamePassed){
+            $('#chats').append('<div>'+object.username+': '+object.text+'</div>');     
+          }
+         
+        }
+        
+        // console.log(object.username);
+        // app[i] = object.username;
+      });    
+    });
+    },
+    error: function (request, errorType, errorMessage) {
+      return 'sorry! '+ 'this is a '+ errorType+ ' message is '+ errorMessage;  
+    }
+
+  });
 });
