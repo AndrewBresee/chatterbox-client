@@ -6,6 +6,19 @@ app.rooms = {};
 
 app.banedChars = ['&','<', '>', '"', "'", '`', '!', '@', '$', '%', '(', ')', '=', '+', '{', '}', '[', ']'];
 
+app.testItem = function(testItem){
+    if (testItem !== undefined ) {
+    for(var j=0; j<testItem.length ; j++){
+      if (app.banedChars.indexOf(testItem[j]) >= 0) {
+        return false;
+      }
+    }
+  } else {
+    return false;
+  }
+  return true;
+}; 
+
 // A method to add unique rooms. Fetch will pull down unique room names, adding them to the dom. 
   // obj[4chan] === undefined
     //obj[4chan] = 4chan;
@@ -87,41 +100,20 @@ app.fetch = function(){
     type: 'GET',
     contentType: 'application/json',
     success: function (array) {
-      console.log(array)
       $.each(array, function(i, objects){
       $.each(objects, function (i, items) {
-        if(items.text !== undefined && items.username !== undefined ){
-          var usernamePassed = true; 
-          
-          for(var i=0; i<items.username.length; i++){
-              if (app.banedChars.indexOf(items.username[i]) >= 0){ 
-                usernamePassed = false;
-              }
-          }
-
-          var textPassed = true; 
-          console.log("items: " , items)
-          if ( items.text !== undefined ) {
-          for(var j=0; j<items.text.length ; j++){
-            if (app.banedChars.indexOf(items.text[i]) >= 0) {
-              textPassed = false;
-            }
-          }
+        
+        if (app.testItem(items.username) && app.testItem(items.text)) {
+          app.addMessage(items.username, items.text);
         }
 
-           console.log("textPassed: ", textPassed);
-           console.log("usernamePassed: ", usernamePassed);
-
-          if(textPassed && usernamePassed){
-            // $('#chats').append('<div>'+items.username+': '+items.text+'</div>');
-            app.addMessage(items.username, items.text);
+        if(app.testItem(items.roomname)){
             if (app.rooms[items.roomname] === undefined){
               app.rooms[items.roomname] = items.roomname;
               app.addRoom(items.roomname);
             }
           }
-         
-        }
+
       });
       });   
     },
