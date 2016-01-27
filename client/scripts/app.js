@@ -105,8 +105,8 @@ app.fetch = function(){
     type: 'GET',
     contentType: 'application/json',
     success: function (array) {
-      $.each(array, function(i, objects){
-      $.each(objects, function (i, items){
+      var $results = array.results;
+      $.each($results, function (i, items){
 
       if(app.testItem(items.roomname)){
         if (app.rooms[items.roomname] === undefined){
@@ -115,44 +115,49 @@ app.fetch = function(){
         }
       }
 
+      // each time we select new room
+        // call the clear message
+        // then append the new messages
+
       $('#roomSelect').on('change', function(){
         var room = $(this).val();
         if(room === items.roomname){
-        console.log("test")
+         
         if (app.testItem(items.username) && app.testItem(items.text)) {
-          //Call roomfilter
-          app.addMessage(items.username, items.text);
+          app.addMessage(items.username, items.text, room);
         }
       }   
       });
 
      
 
-      });
-      });   
+      }); 
     },
     error: function (request, errorType, errorMessage) {
       return 'sorry! '+ 'this is a '+ errorType+ ' message is '+ errorMessage;  
     }
 
   });
-
-
 };
 
 app.clearMessages = function(){
-  $('#chats').children().remove(); 
+  // $('#chats').children().remove(); 
+  $('#chats').html('');
 };
 
-app.addMessage = function (username, text) {
+app.addMessage = function (username, text, roomName) {
   // Add room should take the message sent from fetch
     // and add it intot the chats room with the name
-  //console.log("Element test :", element);
+  //console.log("Element test :", element)
+
+  app.clearMessages();
+
     if (username !== undefined && text !== undefined) {  
       var linkedName = '<a href="#">'+ username +'</a>';
-      var message = '<div class="userChat">'+linkedName+': '+ text+'</div>';
+      var message = '<div class="userChat" class="'+roomName+'">'+linkedName+': '+ text+'</div>';
       $('#main #chats').append(message);
     }
+
 };
 
 app.addRoom = function(room){
