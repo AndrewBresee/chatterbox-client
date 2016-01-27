@@ -115,19 +115,18 @@ app.fetch = function(){
         }
       }
 
-      var selectedRoom = $('#roomSelect').on('change', function(){
-        return $(this).val();
-      });
-
-      console.log("selectedRoom :", selectedRoom);
-
-      if(selectedRoom === items.roomname){
+      $('#roomSelect').on('change', function(){
+        var room = $(this).val();
+        if(room === items.roomname){
         console.log("test")
         if (app.testItem(items.username) && app.testItem(items.text)) {
           //Call roomfilter
           app.addMessage(items.username, items.text);
         }
-      }
+      }   
+      });
+
+     
 
       });
       });   
