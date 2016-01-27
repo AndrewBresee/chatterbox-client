@@ -19,22 +19,27 @@ app.testItem = function(testItem){
   return true;
 }; 
 
-// A method to add unique rooms. Fetch will pull down unique room names, adding them to the dom. 
-  // obj[4chan] === undefined
-    //obj[4chan] = 4chan;
-// Fix the legacy code in fetch --> getting chatbox add to work 
+//TO DO//
 
-//Add rooms should only check if current room to be added is unique
+////Filter messages based on roomname 
+//When seleceting roomname
+//Update page head to roomname
+//Filter messages for only roomname 
+
+////Add rooms
+
+////Submit 
+
+////Refresh messages, automatically or with button
+
+////When clicking on username, send message to user 
+
+
+
+
 //Add rooms will interact with server, and not local html.
 //When adding a room, it will push up to the server. 
 
-
-
-// for in loop
-  // check app.rooms
-    // if found 
-      //true
-    // false
 
 
 
@@ -101,18 +106,28 @@ app.fetch = function(){
     contentType: 'application/json',
     success: function (array) {
       $.each(array, function(i, objects){
-      $.each(objects, function (i, items) {
-        
+      $.each(objects, function (i, items){
+
+      if(app.testItem(items.roomname)){
+        if (app.rooms[items.roomname] === undefined){
+          app.rooms[items.roomname] = items.roomname;
+          app.addRoom(items.roomname);
+        }
+      }
+
+      var selectedRoom = $('#roomSelect').on('change', function(){
+        return $(this).val();
+      });
+
+      console.log("selectedRoom :", selectedRoom);
+
+      if(selectedRoom === items.roomname){
+        console.log("test")
         if (app.testItem(items.username) && app.testItem(items.text)) {
+          //Call roomfilter
           app.addMessage(items.username, items.text);
         }
-
-        if(app.testItem(items.roomname)){
-            if (app.rooms[items.roomname] === undefined){
-              app.rooms[items.roomname] = items.roomname;
-              app.addRoom(items.roomname);
-            }
-          }
+      }
 
       });
       });   
@@ -170,15 +185,16 @@ app.handleSubmit = function(mes){
     
 };
 
-
-
-
 $(document).ready(function () {
   app.fetch();
 
   $('div').on('click', '.username' ,function(){
     app.addFriend();
   });
+
+$('#roomSelect').on('change', function(){
+  app.addMessage($(this).val());
+});
 
 
   // $('.submit').on('click' ,function(event){
